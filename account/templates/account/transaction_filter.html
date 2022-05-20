@@ -1,0 +1,170 @@
+{%extends 'base.html' %}
+
+{%load crispy_forms_tags%}
+{% load help_paginate %}
+
+{%block content%}
+<div id="mt-5">
+  <div id="alert-box"> </div>
+  {% for message in messages %}
+  <div class="alert text-white  bg-success  alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+{% endfor %}
+<div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-primary shadow h-100 py-2">
+              <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                          <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">
+                              DEPOSIT</div>
+                          <div class="h2 mb-0 font-weight-bold text-gray-800">{% if deposit_total %}{{deposit_total}}{%else%} 0 {%endif%}</div>
+                      </div>
+                      <div class="col-auto">
+                          <i class="fas fa-coins fa-5x text-dark"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">
+                            TOLL TOTAL</div>
+                        <div class="h2 mb-0 font-weight-bold text-gray-800">{% if toll_total %}{{toll_total}}{%else%} 0 {%endif%}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-coins fa-5x text-dark"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-lg font-weight-bold text-primary text-uppercase mb-1">
+                          WITHDRAW TOTAL</div>
+                      <div class="h2 mb-0 font-weight-bold text-gray-800">{% if withdraw_total %}{{withdraw_total}}{%else%} 0 {%endif%}</div>
+                  </div>
+                  <div class="col-auto">
+                      <i class="fas fa-coins fa-5x text-dark"></i>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="card card-acent-primary">
+  <div class="card-header "> <strong>TRANSACTION FILTER</strong> </div>
+
+  <div class="card-body">
+
+    
+    <form  method='GET' id="transaction-filter">
+      
+      
+      <div class="row">
+
+        {% for transaction_field in p.form %}
+        <div class="col-lg-2">
+            {{transaction_field| as_crispy_field}}
+                 </div>
+
+        {%endfor%}
+        
+
+        <div class="col-lg-4">
+            <div class="text-right">
+                <button type='submit' class="btn btn-dark"><i class="fas fa-search  text-white"></i>Filter</button>
+        
+              </div>
+              
+
+        </div>
+
+      
+    </form>
+
+  </div>
+
+  <table class ='table table-responsive table-bordered '>
+    <thead>
+        <tr class="bg-dark text-white">
+            <th scope="col">Date</td>
+            <th scope="col">Account Holder</th>
+             <td scope="col">Title</td>
+              <td scope="col">Debit</td> 
+              <td scope="col">Credit</td>
+              <td>Balance</td>
+              <td>Report</td>
+        </tr>    
+    </thead>
+    
+    <tbody>
+       {% if transactions %}
+       {% for transaction in transactions %}
+       <tr {% if transaction.type == 'toll-debit' %} class="bg-light" {%endif%}>
+           <td style="width:20%">{{transaction.timestamp}} {{transaction.date}}</td>
+           <td style="width: 20%">{{transaction.account}}</td>
+           <td>{{transaction.type}} from terminal {{transaction.performed_by}}</td>
+           <td style="width:10%"> {% if transaction.type == 'toll-debit' or transaction.type == 'withdraw' %} {{transaction.amount}} {%endif%}</td>
+            <td style="width: 10%"> {% if not transaction.type == 'toll-debit' and not transaction.type == 'withdraw' %} {{transaction.amount}} {%endif%}</td>
+           <td style="width:15%">{{transaction.balance_after_transaction}}</td>
+           <td><a class=" btn text-white bg-dark" href="{% url 'account:transaction-pdf' transaction.id %}"> <i class="fas fa-file-pdf"></i><br>PDF</a></td>
+       </tr>
+       
+       {%endfor%}
+       
+       {%else%}
+       <tr>
+         <td colspan="6"> No transaction for given filters</td>
+       </tr>
+
+       {%endif%}
+
+    </tbody>
+    
+    </table>
+
+
+
+    <nav aria-label="...">
+        {% if transactions.has_other_pages %}
+            <ul class="pagination justify-content-right" style="flex-wrap:wrap;">
+                {% if transactions.has_previous %}
+                <li class ="page-item"><a class="page-link" tabindex="-1" href="{% paginate_url transactions.previous_page_number 'page' request.GET.urlencode%}">Previous</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                {% endif %}
+                {% for i in transactions.paginator.page_range %}
+                {% if transactions.number == i %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ i }} <span class="sr-only">(current)</span></a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="{% paginate_url i 'page' request.GET.urlencode%}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if transactions.has_next %}
+                <li class="page-item"><a class="page-link" href="{% paginate_url transactions.next_page_number 'page' request.GET.urlencode%}">Next</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                {% endif %}
+            </ul>
+        {% endif %}
+      </nav>
+
+
+</div>
+</div>
+{%endblock%}

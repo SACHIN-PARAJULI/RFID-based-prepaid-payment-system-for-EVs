@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+
+{%block content%}
+
+    
+    
+    
+   <div class="my-5">
+        
+<!--     
+<table class ='table table-bordered '>
+    <thead>
+        <tr class="bg-dark text-white">
+            <th scope="col">Username</td>
+             <td scope="col">Token</td>
+              <td scope="col">Actions</td> 
+        </tr>    
+    </thead>
+    
+    <tbody>
+        {% if token %}
+        <tr>
+            <td style="width:20%">{{request.user}}</td>
+            <td> <input type="text" name="" id="my-token" value="{{token}}" style="width:100%"></td>
+            <td style="width:10%"> <i onclick="myFunction()" class="fas fa-copy fa-3x"></i></td>
+        </tr>
+        
+        {%endif%}
+    </tbody>
+    
+    </table> -->
+
+   </div>
+
+
+
+
+   <style>
+/* 
+.container {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+} */
+.label {
+  padding:10px;
+  font-size:18px;
+  color:#111;
+}
+.copy-text {
+  position:relative;
+  padding:10px;
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:10px;
+  display:flex;
+}
+.copy-text input.text {
+  padding:10px;
+  font-size:18px;
+  color:#555;
+  border:none;
+  outline:none;
+  padding-right:50px;
+}
+.copy-text button {
+  padding:10px;
+  background:#5784f5;
+  color:#fff;
+  font-size:18px;
+  border:none;
+  outline:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+.copy-text button:active {
+  background:#809ce2;
+}
+.copy-text button:before {
+  content:"Copied";
+  position:absolute;
+  top:-45px;
+  right:0px;
+  background:#5c81dc;
+  padding:8px 10px;
+  border-radius:20px;
+  font-size:15px;
+  display:none;
+}
+.copy-text button:after {
+  content:"";
+  position:absolute;
+  top:-20px;
+  right:25px;
+  width:10px;
+  height:10px;
+  background:#5c81dc;
+  transform:rotate(45deg);
+  display:none;
+}
+.copy-text.active button:before,
+.copy-text.active button:after {
+  display:block;
+}
+   </style>
+   <div class="contain">
+    <div class="label">
+    Click to Copy Token for  <small class=" badge badge-success text-white">{{request.user}}</small>
+    </div>
+    <div class="copy-text">
+      <input type="text" class="text" value="{{token}}" style="width:50%;"readonly>
+      <button>
+        <i class="fa fa-clone"></i> Click
+      </button>
+    </div>
+  </div>
+
+
+  <script>
+
+let copyText = document.querySelector(".copy-text");
+copyText.querySelector("button").addEventListener("click",function(){
+  let input = copyText.querySelector("input.text");
+  input.select();
+  document.execCommand("copy");
+  copyText.classList.add("active");
+  window.getSelection().removeAllRanges();
+  setTimeout(function(){
+    copyText.classList.remove("active");
+  },2500);
+});
+
+
+
+       function myFunction() {
+           console.log('clicked');
+    /* Get the text field */
+    var copyText = document.getElementById("my-token");
+  
+    /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+  
+     /* Copy the text inside the text field */
+    navigator.clipboard.writeText(copyText.value);
+  
+    /* Alert the copied text */
+    alert("Copied the text: " + copyText.value);
+  }
+  </script>
+{%endblock%}

@@ -1,0 +1,61 @@
+{% extends 'base.html'%}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="mt-3">
+    <div id="alert-box"> </div>
+    {% for message in messages %}
+    <div class="alert text-white  bg-primary  alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      {{ message }}
+    </div>
+  {% endfor %}
+</div>
+  <div class="card card-acent-primary">
+    <div class="card-header "> <strong>Deposit</strong> </div>
+  
+    <div class="card-body">
+      <form  method='POST' id="deposit-form">
+        {%csrf_token%}
+        <br>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="row">
+           
+      
+                    {%for form_fields in form%}
+                    <div class="col-lg-3">
+                      {{form_fields | as_crispy_field}}
+                
+                    
+            
+                    </div>
+                    
+                    {%endfor%}
+                
+                  </div>
+
+            </li>  
+          
+
+        
+        <br>
+        
+  
+
+
+
+
+        
+        <button type='submit' class="btn btn-primary">Deposit</button>
+        
+      </form>
+  
+    </div>
+  
+  </div>
+
+
+{%endblock%}

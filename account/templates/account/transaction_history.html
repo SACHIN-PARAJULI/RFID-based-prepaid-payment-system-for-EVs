@@ -1,0 +1,110 @@
+
+{%extends 'base.html' %}
+
+
+{%block content %}
+
+<div class="mt-3">
+<div class="container">
+
+<style>
+    table, th, td {
+  border: 1px solid black;
+}
+</style>
+<br>
+
+
+
+
+
+        {% for message in messages %}
+        <div class="alert text-white  bg-primary  alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+    <div class="panel">
+        
+        <div class="panel-body bio-graph-info">
+            <h1><strong>{{transaction_account.name}}</strong> Transaction History</h1>
+            <div class="row">
+                <div class="bio-row">
+                    <p><span>Name </span>: {{transaction_account.name}}  {% if transaction_account.active %}<span class="badge badge-primary">ACTIVE</span> {%else%}<span class="badge badge-secondary">INACTIVE</span>{%endif%}</p>
+                </div>
+                <div class="bio-row">
+                    <p><span>Card UID </span>: {{transaction_account.card_uid}}</p>
+                </div>
+                <div class="bio-row">
+                    <p><span>Contact </span>: {{transaction_account.contact}}</p>
+                </div>
+                <div class="bio-row">
+                    <p><span>Current Balance</span>: <span class="badge badge-primary px-0" >{{transaction_account.balance}}</span> </p>
+                </div>
+                <!-- <div class="bio-row">
+                    <p><span> </span>: UI Designer</p>
+                </div>
+                <div class="bio-row">
+                    <p><span>Email </span>: jsmith@flatlab.com</p>
+                </div>
+                <div class="bio-row">
+                    <p><span>Mobile </span>: (12) 03 4567890</p>
+                </div>
+                <div class="bio-row">
+                    <p><span>Phone </span>: 88 (02) 123456</p>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    
+    <div class="row">
+        <div hx-get="{% url 'account:transaction-partial' %}?type=&card_uid={{transaction_account.card_uid}}&account=&start_date=&end_date=&date_range=week" hx-trigger="load" hx-swap="innerHTML">Get Some HTML</div>
+    </div>
+    
+    
+    
+    
+    <!-- <table class ='table table-bordered '>
+    <thead>
+        <tr class="bg-dark text-white">
+            <th scope="col">Date</td>
+             <td scope="col">Title</td>
+              <td scope="col">Debit</td> 
+              <td scope="col">Credit</td>
+              <td>Balance</td>
+              <td>Report</td>
+        </tr>    
+    </thead>
+    
+    <tbody>
+        {% for transaction in transactions %}
+        <tr {% if transaction.type == 'toll-debit' %} class="bg-success text-white" {%endif%}>
+            <td style="width:20%">{{transaction.timestamp}}</td>
+            <td>{{transaction.type}} from terminal {{transaction.performed_by}}</td>
+           
+            <td style="width:10%"> {% if transaction.type == 'toll-debit' or transaction.type == 'withdraw' %} {{transaction.amount}} {%endif%}</td>
+            <td style="width: 10%"> {% if not transaction.type == 'toll-debit' and not transaction.type == 'withdraw' %} {{transaction.amount}} {%endif%}</td>
+         
+            <td style="width:15%">{{transaction.balance_after_transaction}}</td>
+            <td><a class=" btn text-white bg-dark" href="{% url 'account:transaction-pdf' transaction.id %}"> <i class="fas fa-file-pdf"></i><br>PDF</a></td>
+        </tr>
+        
+        {%endfor%}
+    </tbody>
+    
+    </table> -->
+    </div>
+    
+
+
+
+
+
+
+{%endblock%}
